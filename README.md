@@ -138,9 +138,14 @@ $ cat /etc/telegraf/telegraf.d/inputs_palo_alto.conf
 
 ### Dashboard Preview
 
-> Import the dashboard from [`grafana/palo_alto_dashboard.json`](grafana/palo_alto_dashboard.json), then select your data source from the dropdown
+Import the dashboard:
 
-⚠️ If you are ingesting data to InfluxDB2.x/3.x, you need to configure DBRP for "telegraf" bucket. The data source should be added to Grafana as an InfluxQL data source. See [influxdb_configuration.md](docs/influxdb_configuration.md) for more details.
+* From grafana.com [https://grafana.com/grafana/dashboards/24401-palo-alto-dashboard](https://grafana.com/grafana/dashboards/24401-palo-alto-dashboard)
+* Or from JSON schema [`grafana/palo_alto_dashboard.json`](grafana/palo_alto_dashboard.json)
+
+You can select the data source for the dashboard at the time of import or from the dropdown list at the top after importing.
+
+> ⚠️ If you are ingesting data to InfluxDB2.x/3.x, you need to configure DBRP for "telegraf" bucket. The data source should be added to Grafana as an InfluxQL data source. See [influxdb_configuration.md](docs/influxdb_configuration.md) for more details.
 
 ![System Overview](docs/images/dashboard-system-overview.png)
 
