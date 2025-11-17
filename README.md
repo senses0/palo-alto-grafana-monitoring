@@ -838,6 +838,7 @@ palo-alto-grafana-monitoring/
 │   │   ├── client.py         # Main client implementation
 │   │   └── exceptions.py     # Custom exceptions
 │   ├── stats/                # Statistics collectors
+│   │   ├── __init__.py
 │   │   ├── global_counters.py
 │   │   ├── global_protect.py
 │   │   ├── network_interfaces.py
@@ -849,19 +850,29 @@ palo-alto-grafana-monitoring/
 │       ├── logger.py         # Logging configuration
 │       ├── parsers.py        # Data parsers
 │       ├── stats_config.py   # Stats configuration
+│       ├── table_formatters.py  # Table formatting for output
 │       └── validators.py     # Input validators
 ├── config/                   # Configuration management
+│   ├── __init__.py
 │   ├── config.yaml           # Main configuration file
 │   ├── config.yaml.example   # Example configuration
+│   ├── hostname_cache.json   # Cached firewall hostnames
 │   └── settings.py           # Settings loader
-├── examples/                 # Usage examples
-│   ├── all_stats_data_demo.py
-│   ├── bgp_monitoring.py
-│   ├── tabular_data_demo.py
-│   └── unified_routing_example.py
+├── docs/                     # Documentation
+│   ├── architecture.md       # Architecture documentation
+│   ├── diagrams-quick-reference.md  # Quick reference diagrams
+│   ├── influxdb_configuration.md    # InfluxDB setup guide
+│   ├── influxdb_measurements.md     # Measurements reference
+│   ├── README.md             # Documentation index
+│   └── images/               # Documentation images and screenshots
+├── grafana/                  # Grafana integration
+│   └── palo_alto_dashboard.json    # Dashboard template
 ├── tests/                    # Test suite
+│   ├── __init__.py
 │   ├── conftest.py           # Pytest fixtures
 │   ├── firewall_config.yaml  # Test firewall configuration
+│   ├── firewall_config.example.yaml
+│   ├── README.md             # Testing documentation
 │   └── test_*.py             # Test modules
 ├── logs/                     # Application logs
 │   └── pa_stats.log          # Main log file
@@ -871,6 +882,7 @@ palo-alto-grafana-monitoring/
 ├── requirements.txt          # Python dependencies
 ├── pyproject.toml            # Project configuration
 ├── pytest.ini                # Test configuration
+├── LICENSE                   # MIT License
 └── README.md                 # This file
 ```
 
