@@ -1,0 +1,135 @@
+# Palo Alto Networks Firewall Configuration
+# Unified Multi-Firewall Configuration (Recommended)
+
+firewalls:
+  # Primary production firewall - use descriptive names for your environment
+  primary-fw:
+    host: "neonvamgmt.australiasoutheast.cloudapp.azure.com"
+    port: 443
+    api_key: "LUFRPT1234567890abcdef"  # Required: API key for authentication
+    verify_ssl: false
+    timeout: 30
+    description: "Primary production firewall"
+    location: "Australia Southeast"
+    routing_mode: "auto"  # Options: "auto", "advanced", "legacy" - auto-detects if not specified
+    
+  # Secondary production firewall - you can use IP addresses as keys too
+  secondary-fw:
+    host: "192.168.1.2"
+    port: 443
+    api_key: "LUFRPT0987654321fedcba"  # Replace with actual API key
+    verify_ssl: false
+    timeout: 30
+    description: "Secondary production firewall"
+    location: "US West"
+    routing_mode: "legacy"  # Explicitly set to legacy routing mode
+    
+  # Development firewall example
+  dev-fw:
+    host: "dev-firewall.example.com"
+    port: 443
+    api_key: "your-dev-api-key-here"
+    verify_ssl: true
+    timeout: 30
+    description: "Development firewall"
+    location: "Development Environment"
+    routing_mode: "advanced"  # Explicitly set to advanced routing mode
+
+# Default firewall selection (optional - used when targeting specific firewalls)
+default_firewall: "primary-fw"  # Use the key name from above
+
+# Global settings for all firewalls
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: "logs/pa_stats.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+
+# Query Configuration - applies to all firewalls
+query:
+  max_retries: 3
+  retry_delay: 5  # seconds
+
+# Hostname Cache Configuration
+# Cache actual firewall hostnames to avoid redundant system info queries
+# The cache maps firewall config names to actual hostnames from system info
+hostname_cache:
+  enabled: true
+  ttl_hours: 6  # Time-to-live in hours (how long to cache hostnames)
+  cache_file: "config/hostname_cache.json"  # File to persist cache across restarts
+
+# Stat Collection Configuration - controls which statistics are collected
+stats_collection:
+  # Global settings (applies to all firewalls)
+  enabled_modules:
+    - system
+    - network_interfaces
+    - global_protect
+    - routing  # Unified routing module (replaces advanced_routing and legacy_routing)
+    - vpn_tunnels
+    - global_counters
+  
+  # Per-module granular control
+  modules:
+    network_interfaces:
+      enabled: true
+      collections:
+        interface_info: true
+        interface_counters: true
+    
+    system:
+      enabled: true
+      collections:
+        system_info: true
+        resource_usage: true
+        disk_usage: true
+        ha_status: true
+        environmental: true
+        hardware_info: false  # A special command for hardware info doesn't seem to exist as of now
+        extended_cpu: true  # Per-core CPU statistics and resource monitor data
+    
+    global_protect:
+      enabled: true
+      collections:
+        gateway_summary: true
+        gateway_statistics: true
+        portal_statistics: true
+        portal_summary: true
+    
+    routing:
+      enabled: true
+      collections:
+        bgp_summary: true
+        bgp_peer_status: true
+        bgp_path_monitor: true
+        routing_table: true
+        bgp_routes: true
+        static_routes: true
+    
+    vpn_tunnels:
+      enabled: true
+      collections:
+        tunnel_status: true
+        tunnel_statistics: true
+    
+    global_counters:
+      enabled: true
+      collections:
+        global_counters: true
+  
+  # Per-firewall overrides (optional)
+  firewall_overrides:
+    # Example: Disable routing completely for secondary firewall
+    secondary-fw:
+      routing:
+        enabled: false
+    
+    # Example: Disable specific collections for dev firewall
+    dev-fw:
+      system:
+        collections:
+          hardware_info: false
+          environmental: false
+      global_protect:
+        collections:
+          portal_summary: false

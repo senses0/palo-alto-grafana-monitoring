@@ -1,0 +1,57 @@
+# Example Firewall Configuration for Testing
+
+# Copy this file to firewall_config.yaml and fill in your actual values
+# Or set environment variables: PA_FIREWALL_HOST, PA_FIREWALL_API_KEY, etc.
+
+# Set to true to use real firewall for testing
+# Set to false to use mocked data for unit tests
+use_real_firewall: false
+
+firewall:
+  # Replace with your firewall IP address or hostname
+  host: "your-firewall.example.com"
+  
+  # HTTPS port (typically 443 for Palo Alto firewalls)
+  port: 443
+  
+  # Replace with your actual API key
+  # Generate API key from: Device > Setup > Management > API Key
+  api_key: "YOUR_API_KEY_HERE"
+  
+  # SSL certificate verification
+  # Set to false only for testing with self-signed certificates
+  # Always use true in production environments
+  verify_ssl: true
+  
+  # Request timeout in seconds
+  timeout: 30
+  
+  # Friendly name for this firewall (used in logs and output)
+  firewall_name: "production-fw"
+  
+  # Description of this firewall instance
+  description: "Production Firewall"
+  
+  # Location or environment identifier
+  location: "Production Environment"
+
+# Optional: Additional firewall configurations for multi-firewall setups
+# Uncomment and configure if you have multiple firewalls to monitor
+# firewalls:
+#   - host: "firewall1.example.com"
+#     port: 443
+#     api_key: "API_KEY_1"
+#     verify_ssl: true
+#     timeout: 30
+#     firewall_name: "fw-1"
+#     description: "Primary Firewall"
+#     location: "Data Center 1"
+#   
+#   - host: "firewall2.example.com"
+#     port: 443
+#     api_key: "API_KEY_2"
+#     verify_ssl: true
+#     timeout: 30
+#     firewall_name: "fw-2"
+#     description: "Secondary Firewall"
+#     location: "Data Center 2"
