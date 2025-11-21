@@ -91,7 +91,6 @@
   "editable": false,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
   "links": [],
   "panels": [
     {
@@ -343,7 +342,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 1284
+            "y": 2397
           },
           "id": 84,
           "options": {
@@ -515,7 +514,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 1284
+            "y": 2397
           },
           "id": 85,
           "options": {
@@ -642,7 +641,7 @@
             "h": 11,
             "w": 24,
             "x": 0,
-            "y": 1292
+            "y": 2405
           },
           "id": 86,
           "options": {
@@ -1684,7 +1683,7 @@
             "h": 2,
             "w": 6,
             "x": 13,
-            "y": 4
+            "y": 1110
           },
           "id": 62,
           "options": {
@@ -1839,7 +1838,7 @@
             "h": 2,
             "w": 2,
             "x": 19,
-            "y": 4
+            "y": 1110
           },
           "id": 54,
           "options": {
@@ -1961,7 +1960,7 @@
             "h": 2,
             "w": 3,
             "x": 21,
-            "y": 4
+            "y": 1110
           },
           "id": 57,
           "options": {
@@ -2238,7 +2237,7 @@
             "h": 6,
             "w": 9,
             "x": 0,
-            "y": 4931
+            "y": 3
           },
           "id": 65,
           "options": {
@@ -2573,7 +2572,7 @@
             "h": 6,
             "w": 15,
             "x": 9,
-            "y": 4931
+            "y": 3
           },
           "id": 66,
           "options": {
@@ -3011,7 +3010,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 4970
+            "y": 620
           },
           "id": 67,
           "options": {
@@ -9928,7 +9927,11 @@
                   },
                   {
                     "id": "unit",
-                    "value": "dateTimeAsLocal"
+                    "value": "dateTimeFromNow"
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "As of"
                   }
                 ]
               },
@@ -10063,7 +10066,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 4647
+            "y": 559
           },
           "id": 77,
           "options": {
@@ -10078,12 +10081,6 @@
                 "uid": "${data_source}"
               },
               "groupBy": [
-                {
-                  "params": [
-                    "destination::tag"
-                  ],
-                  "type": "tag"
-                },
                 {
                   "params": [
                     "interface::tag"
@@ -10120,7 +10117,48 @@
                     ],
                     "type": "alias"
                   }
-                ],
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "hostname::tag",
+                  "operator": "=~",
+                  "value": "/^$hostname$/"
+                }
+              ]
+            },
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${DS_INFLUXDB-1_TELEGRAF}"
+              },
+              "groupBy": [
+                {
+                  "params": [
+                    "destination::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "interface::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "pathmonitor_status::tag"
+                  ],
+                  "type": "tag"
+                }
+              ],
+              "hide": false,
+              "measurement": "palo_alto_bgp_path_monitor",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "B",
+              "resultFormat": "table",
+              "select": [
                 [
                   {
                     "params": [
@@ -10138,7 +10176,48 @@
                     ],
                     "type": "alias"
                   }
-                ],
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "hostname::tag",
+                  "operator": "=~",
+                  "value": "/^$hostname$/"
+                }
+              ]
+            },
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${data_source}"
+              },
+              "groupBy": [
+                {
+                  "params": [
+                    "destination::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "interface::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "pathmonitor_status::tag"
+                  ],
+                  "type": "tag"
+                }
+              ],
+              "hide": false,
+              "measurement": "palo_alto_bgp_path_monitor",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "C",
+              "resultFormat": "table",
+              "select": [
                 [
                   {
                     "params": [
@@ -10156,7 +10235,48 @@
                     ],
                     "type": "alias"
                   }
-                ],
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "hostname::tag",
+                  "operator": "=~",
+                  "value": "/^$hostname$/"
+                }
+              ]
+            },
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${DS_INFLUXDB-1_TELEGRAF}"
+              },
+              "groupBy": [
+                {
+                  "params": [
+                    "destination::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "interface::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "pathmonitor_status::tag"
+                  ],
+                  "type": "tag"
+                }
+              ],
+              "hide": false,
+              "measurement": "palo_alto_bgp_path_monitor",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "D",
+              "resultFormat": "table",
+              "select": [
                 [
                   {
                     "params": [
@@ -10174,7 +10294,48 @@
                     ],
                     "type": "alias"
                   }
-                ],
+                ]
+              ],
+              "tags": [
+                {
+                  "key": "hostname::tag",
+                  "operator": "=~",
+                  "value": "/^$hostname$/"
+                }
+              ]
+            },
+            {
+              "datasource": {
+                "type": "influxdb",
+                "uid": "${data_source}"
+              },
+              "groupBy": [
+                {
+                  "params": [
+                    "destination::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "interface::tag"
+                  ],
+                  "type": "tag"
+                },
+                {
+                  "params": [
+                    "pathmonitor_status::tag"
+                  ],
+                  "type": "tag"
+                }
+              ],
+              "hide": false,
+              "measurement": "palo_alto_bgp_path_monitor",
+              "orderByTime": "ASC",
+              "policy": "default",
+              "refId": "E",
+              "resultFormat": "table",
+              "select": [
                 [
                   {
                     "params": [
@@ -10206,6 +10367,10 @@
           "title": "Path Monitor Status",
           "transformations": [
             {
+              "id": "merge",
+              "options": {}
+            },
+            {
               "id": "organize",
               "options": {
                 "excludeByName": {},
@@ -10222,6 +10387,17 @@
                   "pathmonitor_status": 2
                 },
                 "renameByName": {}
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "fields": {},
+                "sort": [
+                  {
+                    "field": "destination"
+                  }
+                ]
               }
             }
           ],
@@ -10356,7 +10532,7 @@
             "h": 10,
             "w": 24,
             "x": 0,
-            "y": 4940
+            "y": 569
           },
           "id": 78,
           "options": {
@@ -10526,6 +10702,32 @@
                       "fixedColor": "blue",
                       "mode": "fixed"
                     }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "options": {
+                          "-1": {
+                            "color": "text",
+                            "index": 1,
+                            "text": "No Data"
+                          }
+                        },
+                        "type": "value"
+                      },
+                      {
+                        "options": {
+                          "match": "null",
+                          "result": {
+                            "color": "text",
+                            "index": 0,
+                            "text": "No Data"
+                          }
+                        },
+                        "type": "special"
+                      }
+                    ]
                   }
                 ]
               }
@@ -10535,7 +10737,7 @@
             "h": 7,
             "w": 24,
             "x": 0,
-            "y": 4648
+            "y": 1113
           },
           "id": 80,
           "options": {
@@ -10570,7 +10772,7 @@
                 },
                 {
                   "params": [
-                    "null"
+                    "-1"
                   ],
                   "type": "fill"
                 }
@@ -10590,7 +10792,7 @@
                   },
                   {
                     "params": [],
-                    "type": "last"
+                    "type": "sum"
                   }
                 ]
               ],
@@ -10608,7 +10810,7 @@
             {
               "id": "renameByRegex",
               "options": {
-                "regex": "palo_alto_routing_table_counts\\.last_routes_(.*)",
+                "regex": "palo_alto_routing_table_counts\\.sum_routes_(.*)",
                 "renamePattern": "$1"
               }
             }
@@ -10731,7 +10933,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 3447
+            "y": 581
           },
           "id": 50,
           "options": {
@@ -11242,7 +11444,7 @@
             "h": 6,
             "w": 24,
             "x": 0,
-            "y": 3459
+            "y": 593
           },
           "id": 100,
           "maxPerRow": 4,
@@ -11492,7 +11694,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 3477
+            "y": 611
           },
           "id": 96,
           "options": {
@@ -11763,7 +11965,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 3477
+            "y": 611
           },
           "id": 97,
           "options": {
@@ -12106,7 +12308,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 3483
+            "y": 617
           },
           "id": 98,
           "options": {
@@ -12353,7 +12555,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 3483
+            "y": 617
           },
           "id": 99,
           "options": {
@@ -12776,7 +12978,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 3489
+            "y": 623
           },
           "id": 81,
           "options": {
@@ -12990,7 +13192,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 55
+            "y": 1168
           },
           "id": 89,
           "options": {
@@ -13138,7 +13340,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 55
+            "y": 1168
           },
           "id": 101,
           "options": {
@@ -13262,7 +13464,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 61
+            "y": 1174
           },
           "id": 91,
           "options": {
@@ -13533,7 +13735,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 61
+            "y": 1174
           },
           "id": 90,
           "options": {
@@ -13948,7 +14150,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 67
+            "y": 1180
           },
           "id": 93,
           "options": {
@@ -14339,7 +14541,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 67
+            "y": 1180
           },
           "id": 92,
           "options": {
@@ -14802,7 +15004,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 73
+            "y": 1186
           },
           "id": 95,
           "options": {
@@ -15097,7 +15299,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 73
+            "y": 1186
           },
           "id": 94,
           "options": {
@@ -15381,7 +15583,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 3699
+            "y": 4812
           },
           "id": 102,
           "options": {
@@ -15724,7 +15926,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 3699
+            "y": 4812
           },
           "id": 104,
           "options": {
@@ -16043,7 +16245,7 @@
             "h": 6,
             "w": 12,
             "x": 0,
-            "y": 3705
+            "y": 4818
           },
           "id": 105,
           "options": {
@@ -16314,7 +16516,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 3705
+            "y": 4818
           },
           "id": 106,
           "options": {
@@ -16787,7 +16989,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 3712
+            "y": 4825
           },
           "id": 31,
           "options": {
@@ -17078,7 +17280,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 3712
+            "y": 4825
           },
           "id": 32,
           "options": {
@@ -17338,7 +17540,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 3712
+            "y": 4825
           },
           "id": 33,
           "options": {
@@ -17552,7 +17754,7 @@
             "h": 6,
             "w": 8,
             "x": 0,
-            "y": 3718
+            "y": 4831
           },
           "id": 34,
           "options": {
@@ -18036,7 +18238,7 @@
             "h": 6,
             "w": 8,
             "x": 8,
-            "y": 3718
+            "y": 4831
           },
           "id": 35,
           "options": {
@@ -18212,7 +18414,7 @@
             "h": 6,
             "w": 8,
             "x": 16,
-            "y": 3718
+            "y": 4831
           },
           "id": 36,
           "options": {
@@ -18350,7 +18552,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 57
+        "y": 107
       },
       "id": 40,
       "panels": [
@@ -18470,7 +18672,7 @@
             "h": 7,
             "w": 7,
             "x": 0,
-            "y": 147549
+            "y": 166192
           },
           "id": 41,
           "options": {
@@ -18740,7 +18942,7 @@
             "h": 7,
             "w": 7,
             "x": 7,
-            "y": 147549
+            "y": 166192
           },
           "id": 43,
           "options": {
@@ -19017,7 +19219,7 @@
             "h": 7,
             "w": 7,
             "x": 14,
-            "y": 147549
+            "y": 166192
           },
           "id": 42,
           "options": {
@@ -19170,7 +19372,7 @@
             "h": 1,
             "w": 3,
             "x": 21,
-            "y": 147549
+            "y": 166192
           },
           "hideTimeOverride": true,
           "id": 46,
@@ -19272,7 +19474,7 @@
             "h": 2,
             "w": 3,
             "x": 21,
-            "y": 147550
+            "y": 166193
           },
           "id": 48,
           "options": {
@@ -19387,7 +19589,7 @@
             "h": 2,
             "w": 3,
             "x": 21,
-            "y": 147552
+            "y": 166195
           },
           "id": 47,
           "options": {
@@ -19504,7 +19706,7 @@
             "h": 2,
             "w": 3,
             "x": 21,
-            "y": 147554
+            "y": 166197
           },
           "id": 44,
           "options": {
@@ -19799,6 +20001,7 @@
   "timezone": "browser",
   "title": "Palo Alto Dashboard",
   "uid": "seppk2w",
-  "version": 186,
-  "weekStart": ""
+  "version": 188,
+  "weekStart": "",
+  "id": null
 }
