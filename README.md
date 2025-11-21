@@ -169,7 +169,7 @@ You can select the data source for the dashboard at the time of import or from t
 - **Read-Only Operations**: Safe monitoring without configuration changes
 - **API Key Authentication**: Secure authentication using API keys only
 - **Structured Logging**: Comprehensive logging with rotation and configurable levels
-- **Hardware and VM Firewalls**: Supports both hardware and vm firewalls (Tested against PAN OS ``11.1.6-h3``. Probably works with some older versions)
+- **Hardware and VM Firewalls**: Supports both hardware and VM firewalls (Tested against PAN OS `11.1.6-h3`. Probably works with some older versions)
 - **Advanced and Legacy Routing mode**: Supports both Advanced Routing and Legacy Routing in Palo Alto Firewalls
 
 ## Architecture
@@ -280,7 +280,7 @@ For detailed architecture diagrams and deployment strategies, see the [Architect
 - Python 3.8 or higher
 - Palo Alto Networks firewall with API access
 - API key for authentication (⚠️ Use an API key that only has read-only capability)
-- InfluxDB backend. (⚠️ If you are using InfluxDB 2.x/3.x or InfluxDB Cloud variation, you will have to create [InfluxDB v1 DPRP mapping](https://docs.influxdata.com/influxdb/v2/reference/cli/influx/v1/dbrp/create/) for you bucket (_See also: [influxdb_configuration.md](docs/influxdb_configuration.md) for more details_). This is will allow InfluxQL queries against the database/bucket. The dashboard included here uses InfluxQL)
+- InfluxDB backend. (⚠️ If you are using InfluxDB 2.x/3.x or InfluxDB Cloud variation, you will have to create [InfluxDB v1 DBRP mapping](https://docs.influxdata.com/influxdb/v2/reference/cli/influx/v1/dbrp/create/) for your bucket (_See also: [influxdb_configuration.md](docs/influxdb_configuration.md) for more details_). This will allow InfluxQL queries against the database/bucket. The dashboard included here uses InfluxQL)
 
 ### Installation
 
