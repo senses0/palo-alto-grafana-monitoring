@@ -636,21 +636,26 @@ class SystemConverter(DataConverter):
             # Some versions may have it directly
             data_processors = resource_monitor
         
-        # Get dp0 data (primary dataplane processor)
-        if 'dp0' not in data_processors:
+        # Get dataplane processor
+        if 'dp0' in data_processors:
+            dp_key = 'dp0'
+        ## Added for compatibility with PA5200 series
+        elif 's1dp0' in data_processors:
+            dp_key = 's1dp0'
+        else:
             return None
         
-        dp0 = data_processors['dp0']
+        dp_data = data_processors[dp_key]
         
         # Get second-level data
-        if 'second' not in dp0:
+        if 'second' not in dp_data:
             return None
         
-        second_data = dp0['second']
+        second_data = dp_data['second']
         
         tags = {
             'hostname': hostname,
-            'dp_id': 'dp0'
+            'dp_id': dp_key
         }
         
         fields = {}
@@ -739,17 +744,22 @@ class SystemConverter(DataConverter):
         else:
             data_processors = resource_monitor
         
-        # Get dp0 data (primary dataplane processor)
-        if 'dp0' not in data_processors:
+        # Get dataplane processor
+        if 'dp0' in data_processors:
+            dp_key = 'dp0'
+        ## Added for compatibility with PA5200 series
+        elif 's1dp0' in data_processors:
+            dp_key = 's1dp0'
+        else:
             return lines
         
-        dp0 = data_processors['dp0']
+        dp_data = data_processors[dp_key]
         
         # Get second-level data
-        if 'second' not in dp0:
+        if 'second' not in dp_data:
             return lines
         
-        second_data = dp0['second']
+        second_data = dp_data['second']
         
         # Get per-core CPU load averages
         if 'cpu-load-average' not in second_data:
@@ -771,7 +781,7 @@ class SystemConverter(DataConverter):
             if core_id is not None and value is not None:
                 tags = {
                     'hostname': hostname,
-                    'dp_id': 'dp0',
+                    'dp_id': dp_key,
                     'core_id': str(core_id)
                 }
                 
@@ -809,8 +819,15 @@ class EnvironmentalConverter(DataConverter):
             lines.extend(thermal_lines)
         
         # 2. Fan Sensors
-        if 'fan' in env_data:
-            fan_lines = self._convert_fan(hostname, env_data['fan'])
+        if 'fans' in env_data:
+            fan_key = 'fans'
+        elif 'fan' in env_data:
+            fan_key = 'fan'
+        else:
+            fan_key = None
+
+        if fan_key:
+            fan_lines = self._convert_fan(hostname, env_data[fan_key])
             lines.extend(fan_lines)
         
         # 3. Power/Voltage Sensors
