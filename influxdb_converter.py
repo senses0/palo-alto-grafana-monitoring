@@ -241,25 +241,25 @@ class SystemConverter(DataConverter):
         lines = []
         
         # 1. System Identity
-        if 'system_info' in data and 'system' in data['system_info']:
+        if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
             line = self._convert_system_identity(hostname, data['system_info']['system'])
             if line:
                 lines.append(line)
         
         # 2. System Uptime
-        if 'system_info' in data and 'system' in data['system_info']:
+        if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
             line = self._convert_system_uptime(hostname, data['system_info']['system'])
             if line:
                 lines.append(line)
         
         # 3. Content Versions
-        if 'system_info' in data and 'system' in data['system_info']:
+        if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
             line = self._convert_content_versions(hostname, data['system_info']['system'])
             if line:
                 lines.append(line)
         
         # 4. MAC Count
-        if 'system_info' in data and 'system' in data['system_info']:
+        if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
             line = self._convert_mac_count(hostname, data['system_info']['system'])
             if line:
                 lines.append(line)
@@ -1048,22 +1048,22 @@ class InterfaceConverter(DataConverter):
         lines = []
         
         # 1. Interface Hardware Info
-        if 'interface_info' in data and 'hw' in data['interface_info']:
+        if 'interface_info' in data and data['interface_info'] and 'hw' in data['interface_info']:
             hw_lines = self._convert_interface_info(hostname, data['interface_info']['hw'])
             lines.extend(hw_lines)
         
         # 2. Interface Logical Config
-        if 'interface_info' in data and 'ifnet' in data['interface_info']:
+        if 'interface_info' in data and data['interface_info'] and 'ifnet' in data['interface_info']:
             logical_lines = self._convert_interface_logical(hostname, data['interface_info']['ifnet'])
             lines.extend(logical_lines)
         
         # 3. Interface Hardware Counters (physical port statistics)
-        if 'interface_counters' in data and 'hw' in data['interface_counters']:
+        if 'interface_counters' in data and data['interface_counters'] and 'hw' in data['interface_counters']:
             counter_lines = self._convert_interface_counters_hw(hostname, data['interface_counters']['hw'])
             lines.extend(counter_lines)
         
         # 4. Interface Logical Counters (firewall/security processing statistics)
-        if 'interface_counters' in data and 'ifnet' in data['interface_counters']:
+        if 'interface_counters' in data and data['interface_counters'] and 'ifnet' in data['interface_counters']:
             logical_counter_lines = self._convert_interface_counters_logical(hostname, data['interface_counters']['ifnet'])
             lines.extend(logical_counter_lines)
         
@@ -1250,7 +1250,7 @@ class RoutingConverter(DataConverter):
             lines.extend(peer_lines)
         
         # 3. BGP Path Monitor
-        if 'bgp_path_monitor' in data and 'entry' in data['bgp_path_monitor']:
+        if 'bgp_path_monitor' in data and data['bgp_path_monitor'] and 'entry' in data['bgp_path_monitor']:
             path_lines = self._convert_bgp_path_monitor(hostname, data['bgp_path_monitor']['entry'])
             lines.extend(path_lines)
         
@@ -1473,11 +1473,11 @@ class CountersConverter(DataConverter):
         """Convert counters module data to InfluxDB line protocol."""
         lines = []
         
-        if 'global_counters' not in data or 'global' not in data['global_counters']:
+        if 'global_counters' not in data or not data['global_counters'] or 'global' not in data['global_counters']:
             return lines
         
         global_data = data['global_counters']['global']
-        if 'counters' not in global_data or 'entry' not in global_data['counters']:
+        if not global_data or 'counters' not in global_data or not global_data['counters'] or 'entry' not in global_data['counters']:
             return lines
         
         # Group counters by category
@@ -1523,12 +1523,12 @@ class GlobalProtectConverter(DataConverter):
         lines = []
         
         # 1. Gateway Summary
-        if 'gateway_summary' in data and 'entry' in data['gateway_summary']:
+        if 'gateway_summary' in data and data['gateway_summary'] and 'entry' in data['gateway_summary']:
             gw_lines = self._convert_gateway_summary(hostname, data['gateway_summary']['entry'])
             lines.extend(gw_lines)
         
         # 2. Portal Summary
-        if 'portal_summary' in data and 'entry' in data['portal_summary']:
+        if 'portal_summary' in data and data['portal_summary'] and 'entry' in data['portal_summary']:
             portal_lines = self._convert_portal_summary(hostname, data['portal_summary']['entry'])
             lines.extend(portal_lines)
         
@@ -1594,7 +1594,7 @@ class VPNConverter(DataConverter):
                 lines.append(line)
         
         # 2. IPsec Flow Operational State (from vpn_flows.IPSec.entry)
-        if 'vpn_flows' in data and data['vpn_flows'].get('IPSec'):
+        if 'vpn_flows' in data and data['vpn_flows'] and data['vpn_flows'].get('IPSec'):
             flow_lines = self._convert_ipsec_flows(hostname, data['vpn_flows']['IPSec'])
             lines.extend(flow_lines)
         
@@ -2065,7 +2065,7 @@ class PaloAltoInfluxDBConverter:
         for firewall_name, fw_data in system_data.items():
             if fw_data.get('success') and 'data' in fw_data:
                 data = fw_data['data']
-                if 'system_info' in data and 'system' in data['system_info']:
+                if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
                     hostname = data['system_info']['system'].get('hostname')
                     if hostname:
                         hostname_map[firewall_name] = hostname
