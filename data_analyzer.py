@@ -235,7 +235,7 @@ class ComprehensiveDataAnalyzer:
             data = fw_data['data']
             
             # System Identity
-            if 'system_info' in data and 'system' in data['system_info']:
+            if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
                 system = data['system_info']['system']
                 
                 proposal = InfluxDBSchemaProposal(
@@ -273,7 +273,7 @@ class ComprehensiveDataAnalyzer:
                 self.proposals.append(proposal)
             
             # System Uptime
-            if 'system_info' in data and 'system' in data['system_info']:
+            if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
                 system = data['system_info']['system']
                 
                 proposal = InfluxDBSchemaProposal(
@@ -289,7 +289,7 @@ class ComprehensiveDataAnalyzer:
                 self.proposals.append(proposal)
             
             # Content Versions
-            if 'system_info' in data and 'system' in data['system_info']:
+            if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
                 system = data['system_info']['system']
                 
                 proposal = InfluxDBSchemaProposal(
@@ -318,7 +318,7 @@ class ComprehensiveDataAnalyzer:
                 self.proposals.append(proposal)
             
             # MAC Count
-            if 'system_info' in data and 'system' in data['system_info']:
+            if 'system_info' in data and data['system_info'] and 'system' in data['system_info']:
                 system = data['system_info']['system']
                 
                 # VM firewalls use 'vm-mac-count', hardware firewalls use 'mac_count'
@@ -809,7 +809,7 @@ class ComprehensiveDataAnalyzer:
             data = fw_data['data']
             
             # Interface Info
-            if 'interface_info' in data and 'hw' in data['interface_info']:
+            if 'interface_info' in data and data['interface_info'] and 'hw' in data['interface_info']:
                 hw = data['interface_info']['hw']
                 if 'entry' in hw and hw['entry']:
                     first_int = hw['entry'][0]
@@ -842,7 +842,7 @@ class ComprehensiveDataAnalyzer:
                     self.proposals.append(proposal)
             
             # Interface Logical Info (ifnet)
-            if 'interface_info' in data and 'ifnet' in data['interface_info']:
+            if 'interface_info' in data and data['interface_info'] and 'ifnet' in data['interface_info']:
                 ifnet = data['interface_info']['ifnet']
                 if 'entry' in ifnet and ifnet['entry']:
                     first_int = ifnet['entry'][0]
@@ -873,7 +873,7 @@ class ComprehensiveDataAnalyzer:
                     self.proposals.append(proposal)
             
             # Interface Hardware Counters
-            if 'interface_counters' in data and 'hw' in data['interface_counters']:
+            if 'interface_counters' in data and data['interface_counters'] and 'hw' in data['interface_counters']:
                 hw = data['interface_counters']['hw']
                 if 'entry' in hw and hw['entry']:
                     first_int = hw['entry'][0]
@@ -927,7 +927,7 @@ class ComprehensiveDataAnalyzer:
                     self.proposals.append(proposal)
             
             # Interface Logical Counters
-            if 'interface_counters' in data and 'ifnet' in data['interface_counters']:
+            if 'interface_counters' in data and data['interface_counters'] and 'ifnet' in data['interface_counters']:
                 ifnet = data['interface_counters']['ifnet']
                 if 'ifnet' in ifnet and 'entry' in ifnet['ifnet']:
                     entries = ifnet['ifnet']['entry']
@@ -1085,7 +1085,7 @@ class ComprehensiveDataAnalyzer:
                 self.proposals.append(proposal)
             
             # BGP Path Monitor (per monitored destination)
-            if 'bgp_path_monitor' in data and 'entry' in data['bgp_path_monitor']:
+            if 'bgp_path_monitor' in data and data['bgp_path_monitor'] and 'entry' in data['bgp_path_monitor']:
                 entries = data['bgp_path_monitor']['entry']
                 if entries:
                     first_entry = entries[0]
@@ -1239,9 +1239,9 @@ class ComprehensiveDataAnalyzer:
             data = fw_data['data']
             
             # Global Counters
-            if 'global_counters' in data and 'global' in data['global_counters']:
+            if 'global_counters' in data and data['global_counters'] and 'global' in data['global_counters']:
                 global_data = data['global_counters']['global']
-                if 'counters' in global_data and 'entry' in global_data['counters']:
+                if global_data and 'counters' in global_data and global_data['counters'] and 'entry' in global_data['counters']:
                     entries = global_data['counters']['entry']
                     
                     # Group counters by category
@@ -1299,7 +1299,7 @@ class ComprehensiveDataAnalyzer:
             data = fw_data['data']
             
             # Gateway Summary
-            if 'gateway_summary' in data and 'entry' in data['gateway_summary']:
+            if 'gateway_summary' in data and data['gateway_summary'] and 'entry' in data['gateway_summary']:
                 entries = data['gateway_summary']['entry']
                 if entries:
                     first_gw = entries[0]
@@ -1324,7 +1324,7 @@ class ComprehensiveDataAnalyzer:
                     self.proposals.append(proposal)
             
             # Portal Summary
-            if 'portal_summary' in data and 'entry' in data['portal_summary']:
+            if 'portal_summary' in data and data['portal_summary'] and 'entry' in data['portal_summary']:
                 entries = data['portal_summary']['entry']
                 if entries:
                     first_portal = entries[0]
@@ -1376,7 +1376,7 @@ class ComprehensiveDataAnalyzer:
                 self.proposals.append(proposal)
             
             # IPsec Flow Operational State (from vpn_flows.IPSec.entry)
-            if 'vpn_flows' in data and data['vpn_flows'].get('IPSec'):
+            if 'vpn_flows' in data and data['vpn_flows'] and data['vpn_flows'].get('IPSec'):
                 ipsec_data = data['vpn_flows']['IPSec']
                 flow_entries = []
                 if isinstance(ipsec_data, dict) and 'entry' in ipsec_data:
@@ -1454,7 +1454,7 @@ class ComprehensiveDataAnalyzer:
                         self.proposals.append(proposal)
             
             # VPN Gateways (per gateway)
-            if 'vpn_gateways' in data and data['vpn_gateways'].get('entries'):
+            if 'vpn_gateways' in data and data['vpn_gateways'] and data['vpn_gateways'].get('entries'):
                 gateways_data = data['vpn_gateways']
                 if isinstance(gateways_data, dict) and 'entries' in gateways_data:
                     entries = gateways_data['entries']
@@ -1505,7 +1505,7 @@ class ComprehensiveDataAnalyzer:
                             self.proposals.append(proposal)
             
             # IPsec Security Associations (per SA)
-            if 'ipsec_sa' in data and data['ipsec_sa'].get('entries'):
+            if 'ipsec_sa' in data and data['ipsec_sa'] and data['ipsec_sa'].get('entries'):
                 sa_data = data['ipsec_sa']
                 if isinstance(sa_data, dict) and 'entries' in sa_data:
                     entries = sa_data['entries']
