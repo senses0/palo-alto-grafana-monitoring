@@ -884,6 +884,7 @@ palo-alto-grafana-monitoring/
 ├── pa_query.py               # Main CLI tool
 ├── influxdb_converter.py     # InfluxDB line protocol converter
 ├── data_analyzer.py          # Schema analysis and documentation tool
+├── obfuscate_json.py         # Sensitive data obfuscation for sharing
 ├── requirements.txt          # Python dependencies
 ├── pyproject.toml            # Project configuration
 ├── pytest.ini                # Test configuration
