@@ -151,7 +151,7 @@ class ComprehensiveDataAnalyzer:
             # Normalize bgp_summary
             if 'bgp_summary' in routing_data:
                 bgp_summary = routing_data['bgp_summary']
-                if 'entry' in bgp_summary and isinstance(bgp_summary['entry'], dict):
+                if bgp_summary and 'entry' in bgp_summary and isinstance(bgp_summary['entry'], dict):
                     entry = bgp_summary['entry']
                     vrf_name = entry.get('@virtual-router', 'default')
                     normalized_entry = {k: v for k, v in entry.items() if not k.startswith('@')}
@@ -160,7 +160,7 @@ class ComprehensiveDataAnalyzer:
             # Normalize bgp_peer_status
             if 'bgp_peer_status' in routing_data:
                 bgp_peers = routing_data['bgp_peer_status']
-                if 'entry' in bgp_peers:
+                if bgp_peers and 'entry' in bgp_peers:
                     entries = bgp_peers['entry']
                     if not isinstance(entries, list):
                         entries = [entries]
@@ -194,7 +194,7 @@ class ComprehensiveDataAnalyzer:
             for collection_name in ['routing_table', 'bgp_routes', 'static_routes']:
                 if collection_name in routing_data:
                     routes = routing_data[collection_name]
-                    if 'entry' in routes:
+                    if routes and 'entry' in routes:
                         entries = routes['entry']
                         if not isinstance(entries, list):
                             entries = [entries]
@@ -672,6 +672,9 @@ class ComprehensiveDataAnalyzer:
                 for slot_name, slot_data in thermal.items():
                     if 'entry' in slot_data and slot_data['entry']:
                         entries = slot_data['entry']
+                        # Handle both single entry (dict) and multiple entries (list)
+                        if isinstance(entries, dict):
+                            entries = [entries]
                         first_entry = entries[0]
                         
                         proposal = InfluxDBSchemaProposal(
@@ -705,6 +708,9 @@ class ComprehensiveDataAnalyzer:
                 for slot_name, slot_data in fan.items():
                     if 'entry' in slot_data and slot_data['entry']:
                         entries = slot_data['entry']
+                        # Handle both single entry (dict) and multiple entries (list)
+                        if isinstance(entries, dict):
+                            entries = [entries]
                         first_entry = entries[0]
                         
                         proposal = InfluxDBSchemaProposal(
@@ -737,6 +743,9 @@ class ComprehensiveDataAnalyzer:
                 for slot_name, slot_data in power.items():
                     if 'entry' in slot_data and slot_data['entry']:
                         entries = slot_data['entry']
+                        # Handle both single entry (dict) and multiple entries (list)
+                        if isinstance(entries, dict):
+                            entries = [entries]
                         first_entry = entries[0]
                         
                         proposal = InfluxDBSchemaProposal(
@@ -770,6 +779,9 @@ class ComprehensiveDataAnalyzer:
                 for slot_name, slot_data in ps.items():
                     if 'entry' in slot_data and slot_data['entry']:
                         entries = slot_data['entry']
+                        # Handle both single entry (dict) and multiple entries (list)
+                        if isinstance(entries, dict):
+                            entries = [entries]
                         first_entry = entries[0]
                         
                         proposal = InfluxDBSchemaProposal(
@@ -1008,7 +1020,7 @@ class ComprehensiveDataAnalyzer:
             data = fw_data['data']
             
             # BGP Summary (only if operational statistics are present, not just config)
-            if 'bgp_summary' in data:
+            if 'bgp_summary' in data and data['bgp_summary']:
                 summary = data['bgp_summary']
                 # Check if this is operational data (has stats) vs config data (per-VRF settings)
                 # Operational data has: total_peers, peers_established, peers_down, total_prefixes

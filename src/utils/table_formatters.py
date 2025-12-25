@@ -569,7 +569,7 @@ def format_routing_info_rich(data: Dict[str, Any]) -> str:
             output.append(table)
         
         # Path Monitor Status
-        if 'bgp_path_monitor' in firewall_data and 'entry' in firewall_data['bgp_path_monitor']:
+        if 'bgp_path_monitor' in firewall_data and firewall_data['bgp_path_monitor'] and 'entry' in firewall_data['bgp_path_monitor']:
             entries = firewall_data['bgp_path_monitor']['entry']
             if entries:
                 table = Table(
@@ -669,7 +669,7 @@ def format_global_counters_rich(data: Dict[str, Any]) -> str:
             output.append(table)
         
         # Global Counters by Category
-        if 'global_counters' in data_dict and 'global' in data_dict['global_counters']:
+        if 'global_counters' in data_dict and data_dict['global_counters'] and 'global' in data_dict['global_counters']:
             global_data = data_dict['global_counters']['global']
             if 'counters' in global_data and 'entry' in global_data['counters']:
                 entries = global_data['counters']['entry']
@@ -754,7 +754,7 @@ def format_global_protect_rich(data: Dict[str, Any]) -> str:
         data_dict = result.get('data', {})
         
         # Gateway Summary
-        if 'gateway_summary' in data_dict and 'entry' in data_dict['gateway_summary']:
+        if 'gateway_summary' in data_dict and data_dict['gateway_summary'] and 'entry' in data_dict['gateway_summary']:
             entries = data_dict['gateway_summary']['entry']
             if not isinstance(entries, list):
                 entries = [entries]
@@ -783,7 +783,7 @@ def format_global_protect_rich(data: Dict[str, Any]) -> str:
             output.append(table)
         
         # Portal Summary
-        if 'portal_summary' in data_dict and 'entry' in data_dict['portal_summary']:
+        if 'portal_summary' in data_dict and data_dict['portal_summary'] and 'entry' in data_dict['portal_summary']:
             entries = data_dict['portal_summary']['entry']
             if not isinstance(entries, list):
                 entries = [entries]

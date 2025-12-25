@@ -1887,7 +1887,7 @@ class PaloAltoInfluxDBConverter:
             # Normalize bgp_summary
             if 'bgp_summary' in routing_data:
                 bgp_summary = routing_data['bgp_summary']
-                if 'entry' in bgp_summary and isinstance(bgp_summary['entry'], dict):
+                if bgp_summary and 'entry' in bgp_summary and isinstance(bgp_summary['entry'], dict):
                     entry = bgp_summary['entry']
                     vrf_name = entry.get('@virtual-router', 'default')
                     normalized_entry = {k: v for k, v in entry.items() if not k.startswith('@')}
@@ -1898,7 +1898,7 @@ class PaloAltoInfluxDBConverter:
             # Normalize bgp_peer_status
             if 'bgp_peer_status' in routing_data:
                 bgp_peers = routing_data['bgp_peer_status']
-                if 'entry' in bgp_peers:
+                if bgp_peers and 'entry' in bgp_peers:
                     entries = bgp_peers['entry']
                     if not isinstance(entries, list):
                         entries = [entries]
@@ -1934,7 +1934,7 @@ class PaloAltoInfluxDBConverter:
             for collection_name in ['routing_table', 'bgp_routes', 'static_routes']:
                 if collection_name in routing_data:
                     routes = routing_data[collection_name]
-                    if 'entry' in routes:
+                    if routes and 'entry' in routes:
                         entries = routes['entry']
                         if not isinstance(entries, list):
                             entries = [entries]
