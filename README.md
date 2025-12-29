@@ -605,6 +605,7 @@ Edit `config/config.yaml` to configure your firewalls:
 ```yaml
 firewalls:
   primary-fw:
+    enabled: true  # Set to false to disable polling (default: true)
     host: "firewall.example.com"
     port: 443
     api_key: "your-api-key-here"
@@ -613,7 +614,32 @@ firewalls:
     description: "Primary production firewall"
     location: "Data Center 1"
     routing_mode: "auto"  # auto, advanced, or legacy
+    
+  # Example: Temporarily disabled firewall
+  maintenance-fw:
+    enabled: false  # This firewall will not be polled
+    host: "maintenance-fw.example.com"
+    port: 443
+    api_key: "your-api-key-here"
+    verify_ssl: true
+    timeout: 30
+    description: "Firewall under maintenance"
+    location: "Data Center 2"
 ```
+
+**Configuration Parameters:**
+
+| Parameter | Required | Default | Description |
+|-----------|----------|---------|-------------|
+| `enabled` | No | `true` | Enable/disable polling for this firewall |
+| `host` | Yes | - | Firewall hostname or IP address |
+| `port` | No | `443` | API port |
+| `api_key` | Yes | - | API key for authentication |
+| `verify_ssl` | No | `true` | Enable SSL certificate verification |
+| `timeout` | No | `30` | Request timeout in seconds |
+| `description` | No | - | Human-readable description |
+| `location` | No | - | Physical or logical location |
+| `routing_mode` | No | `auto` | Routing mode: `auto`, `advanced`, or `legacy` |
 
 ### Module Configuration
 

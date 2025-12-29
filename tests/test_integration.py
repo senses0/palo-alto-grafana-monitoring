@@ -247,6 +247,12 @@ class TestCompleteWorkflow:
         
         self.mock_settings.get_firewall.side_effect = mock_get_firewall
         
+        # Mock enabled/disabled firewalls (all enabled by default in tests)
+        firewalls_config = self.mock_settings.get_firewalls.return_value
+        self.mock_settings.get_enabled_firewalls.return_value = firewalls_config
+        self.mock_settings.get_disabled_firewalls.return_value = {}
+        self.mock_settings.is_firewall_enabled.return_value = True
+        
         # Initialize multi-firewall client
         client = PaloAltoClient()
         
@@ -696,6 +702,12 @@ class TestPerformanceWorkflow:
             return self.mock_settings.get_firewalls.return_value.get(firewall_name, {})
         
         self.mock_settings.get_firewall.side_effect = mock_get_firewall
+        
+        # Mock enabled/disabled firewalls (all enabled by default in tests)
+        firewalls_config = self.mock_settings.get_firewalls.return_value
+        self.mock_settings.get_enabled_firewalls.return_value = firewalls_config
+        self.mock_settings.get_disabled_firewalls.return_value = {}
+        self.mock_settings.is_firewall_enabled.return_value = True
         
         # Initialize multi-firewall client
         client = PaloAltoClient()

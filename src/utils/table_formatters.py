@@ -1050,9 +1050,17 @@ def format_firewall_summary_rich(data: Dict[str, Any]) -> str:
     """Format firewall summary with Rich tables."""
     output = []
     
-    # Summary header
+    # Summary header with enabled/disabled counts
+    total = data.get('total_firewalls', 0)
+    enabled = data.get('enabled_firewalls', total)  # Default to total for backward compatibility
+    disabled = data.get('disabled_firewalls', 0)
+    
+    header_text = f"[bold white]Configured Firewalls: {total}[/bold white]"
+    if disabled > 0:
+        header_text += f"  [green]({enabled} enabled[/green], [red]{disabled} disabled)[/red]"
+    
     header = Panel(
-        f"[bold white]Configured Firewalls: {data.get('total_firewalls', 0)}[/bold white]",
+        header_text,
         style="bold blue",
         border_style="blue"
     )
@@ -1066,6 +1074,7 @@ def format_firewall_summary_rich(data: Dict[str, Any]) -> str:
         header_style="bold cyan"
     )
     table.add_column("Name", style="cyan", no_wrap=True)
+    table.add_column("Enabled", style="white", justify="center")
     table.add_column("Host", style="blue")
     table.add_column("Port", style="yellow", justify="right")
     table.add_column("Location", style="green")
@@ -1076,8 +1085,16 @@ def format_firewall_summary_rich(data: Dict[str, Any]) -> str:
         ssl_verify = config.get('verify_ssl', True)
         ssl_style = "green" if ssl_verify else "yellow"
         
+        # Handle enabled status with visual indicator
+        is_enabled = config.get('enabled', True)
+        if is_enabled:
+            enabled_display = "[bold green]✓[/bold green]"
+        else:
+            enabled_display = "[bold red]✗[/bold red]"
+        
         table.add_row(
             name,
+            enabled_display,
             config.get('host', 'N/A'),
             str(config.get('port', 'N/A')),
             config.get('location', 'N/A'),

@@ -98,15 +98,26 @@ class PaloAltoClient:
         self.multi_firewall_mode = True
         self.firewalls = {}
         
-        # Get all configured firewalls
-        firewall_configs = settings.get_firewalls()
-        if not firewall_configs:
+        # Get all configured firewalls and enabled firewalls
+        all_firewall_configs = settings.get_firewalls()
+        enabled_firewall_configs = settings.get_enabled_firewalls()
+        disabled_firewall_configs = settings.get_disabled_firewalls()
+        
+        if not all_firewall_configs:
             raise ConfigurationError("No firewall configurations found")
         
-        logger.info(f"Initializing multi-firewall client for {len(firewall_configs)} configured firewalls")
+        if not enabled_firewall_configs:
+            raise ConfigurationError("No enabled firewall configurations found. All firewalls are disabled.")
         
-        # Initialize individual clients for each firewall
-        for name, config in firewall_configs.items():
+        # Log disabled firewalls
+        if disabled_firewall_configs:
+            disabled_names = list(disabled_firewall_configs.keys())
+            logger.info(f"Skipping {len(disabled_names)} disabled firewall(s): {', '.join(disabled_names)}")
+        
+        logger.info(f"Initializing multi-firewall client for {len(enabled_firewall_configs)} enabled firewall(s) out of {len(all_firewall_configs)} configured")
+        
+        # Initialize individual clients for each enabled firewall only
+        for name, config in enabled_firewall_configs.items():
             try:
                 # Create individual client instance
                 individual_client = PaloAltoClient(firewall_name=name)
@@ -121,7 +132,7 @@ class PaloAltoClient:
         
         # Reset logger context to generic for multi-firewall summary message
         update_logger_firewall_context(logger, "multi-firewall", "all")
-        logger.info(f"Successfully initialized {len(self.firewalls)} out of {len(firewall_configs)} firewall clients")
+        logger.info(f"Successfully initialized {len(self.firewalls)} out of {len(enabled_firewall_configs)} enabled firewall clients")
         
         # Set default values from first firewall for backward compatibility
         first_firewall = next(iter(self.firewalls.values()))
@@ -436,10 +447,18 @@ class PaloAltoClient:
         return list(self.firewalls.keys())
     
     def get_firewall_summary(self) -> Dict[str, Any]:
-        """Get a summary of all configured firewalls."""
+        """Get a summary of all configured firewalls (including disabled ones)."""
+        all_configs = settings.get_firewalls()
+        enabled_configs = settings.get_enabled_firewalls()
+        disabled_configs = settings.get_disabled_firewalls()
+        
         if not self.multi_firewall_mode:
+            firewall_config = settings.get_firewall(self.firewall_name)
+            is_enabled = settings.is_firewall_enabled(self.firewall_name)
             return {
                 'total_firewalls': 1,
+                'enabled_firewalls': 1 if is_enabled else 0,
+                'disabled_firewalls': 0 if is_enabled else 1,
                 'firewalls': {
                     self.firewall_name: {
                         'host': self.host,
@@ -447,25 +466,44 @@ class PaloAltoClient:
                         'description': self.description,
                         'location': self.location,
                         'verify_ssl': self.verify_ssl,
-                        'timeout': self.timeout
+                        'timeout': self.timeout,
+                        'enabled': is_enabled
                     }
                 }
             }
         
         summary = {
-            'total_firewalls': len(self.firewalls),
+            'total_firewalls': len(all_configs),
+            'enabled_firewalls': len(enabled_configs),
+            'disabled_firewalls': len(disabled_configs),
             'firewalls': {}
         }
         
-        for name, client in self.firewalls.items():
-            summary['firewalls'][name] = {
-                'host': client.host,
-                'port': client.port,
-                'description': client.description,
-                'location': client.location,
-                'verify_ssl': client.verify_ssl,
-                'timeout': client.timeout
-            }
+        # Include all firewalls in summary (both enabled and disabled)
+        for name, config in all_configs.items():
+            is_enabled = settings.is_firewall_enabled(name)
+            if is_enabled and name in self.firewalls:
+                client = self.firewalls[name]
+                summary['firewalls'][name] = {
+                    'host': client.host,
+                    'port': client.port,
+                    'description': client.description,
+                    'location': client.location,
+                    'verify_ssl': client.verify_ssl,
+                    'timeout': client.timeout,
+                    'enabled': True
+                }
+            else:
+                # Disabled firewall - get info from config
+                summary['firewalls'][name] = {
+                    'host': config.get('host', 'Unknown'),
+                    'port': config.get('port', 443),
+                    'description': config.get('description', 'Unknown'),
+                    'location': config.get('location', 'Unknown'),
+                    'verify_ssl': config.get('verify_ssl', False),
+                    'timeout': config.get('timeout', 30),
+                    'enabled': is_enabled
+                }
         
         return summary
     

@@ -46,15 +46,18 @@ class Settings:
         # Check for new multi-firewall format
         if 'firewalls' in config:
             firewalls = config['firewalls']
-            # Ensure routing_mode is set for each firewall
+            # Ensure routing_mode and enabled are set for each firewall
             for firewall_name, firewall_config in firewalls.items():
                 if 'routing_mode' not in firewall_config:
                     firewall_config['routing_mode'] = 'auto'  # Default to auto-detection
+                if 'enabled' not in firewall_config:
+                    firewall_config['enabled'] = True  # Default to enabled
         # Check for old single firewall format (backward compatibility)
         elif 'firewall' in config:
             # Convert old format to new format
             old_firewall = config['firewall']
             firewalls['default'] = {
+                'enabled': True,  # Default to enabled for legacy format
                 'host': old_firewall.get('host'),
                 'port': old_firewall.get('port', 443),
                 'api_key': old_firewall.get('api_key'),
@@ -84,11 +87,32 @@ class Settings:
         return firewalls
     
     def get_firewalls(self) -> Dict[str, Any]:
-        """Get all configured firewalls."""
+        """Get all configured firewalls (including disabled ones)."""
         return self.config.get('firewalls', {})
     
+    def get_enabled_firewalls(self) -> Dict[str, Any]:
+        """Get only enabled firewalls for polling."""
+        return {
+            name: config for name, config in self.get_firewalls().items()
+            if self._parse_bool(config.get('enabled', True))
+        }
+    
+    def get_disabled_firewalls(self) -> Dict[str, Any]:
+        """Get only disabled firewalls (for informational purposes)."""
+        return {
+            name: config for name, config in self.get_firewalls().items()
+            if not self._parse_bool(config.get('enabled', True))
+        }
+    
+    def is_firewall_enabled(self, name: str) -> bool:
+        """Check if a specific firewall is enabled for polling."""
+        firewall = self.get_firewalls().get(name)
+        if not firewall:
+            return False
+        return self._parse_bool(firewall.get('enabled', True))
+    
     def get_firewall(self, name: Optional[str] = None) -> Optional[Dict[str, Any]]:
-        """Get a specific firewall configuration by name."""
+        """Get a specific firewall configuration by name (regardless of enabled status)."""
         firewalls = self.get_firewalls()
         
         if not firewalls:
@@ -105,8 +129,12 @@ class Settings:
         return firewalls.get(name)
     
     def get_firewall_names(self) -> List[str]:
-        """Get list of all configured firewall names."""
+        """Get list of all configured firewall names (including disabled ones)."""
         return list(self.get_firewalls().keys())
+    
+    def get_enabled_firewall_names(self) -> List[str]:
+        """Get list of enabled firewall names only."""
+        return list(self.get_enabled_firewalls().keys())
     
     def _parse_bool(self, value: Any) -> bool:
         """Parse boolean value from various formats."""
