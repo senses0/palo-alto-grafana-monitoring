@@ -182,7 +182,7 @@ python traffic_viewer.py --test
 python traffic_viewer.py
 ```
 
-https://github.com/senses0/palo-alto-grafana-monitoring/raw/main/docs/images/traffic-view-demo-33.mp4
+https://github.com/user-attachments/assets/7322049a-015d-48a5-8409-3f51c013b418
 
 
 ## Features
