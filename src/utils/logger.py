@@ -7,6 +7,11 @@ from pathlib import Path
 from typing import Optional
 from config.settings import settings
 
+# Global flag to control console logging
+# Set to True to suppress console output (file logging still works)
+_console_logging_suppressed = False
+
+
 class FirewallContextFilter(logging.Filter):
     """Filter to add firewall context to log records."""
     
@@ -44,17 +49,18 @@ def get_logger(name: str, firewall_name: str = None, firewall_host: str = None) 
             '%(asctime)s - %(name)s - [%(firewall_name)s:%(firewall_host)s] - %(levelname)s - %(message)s'
         )
         
-        # Console handler
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(level)
-        console_handler.setFormatter(formatter)
-        
-        # Add firewall context filter
-        firewall_filter = FirewallContextFilter()
-        if firewall_name:
-            firewall_filter.set_firewall_context(firewall_name, firewall_host)
-        console_handler.addFilter(firewall_filter)
-        logger.addHandler(console_handler)
+        # Console handler - only add if not suppressed
+        if not _console_logging_suppressed:
+            console_handler = logging.StreamHandler()
+            console_handler.setLevel(level)
+            console_handler.setFormatter(formatter)
+            
+            # Add firewall context filter
+            firewall_filter = FirewallContextFilter()
+            if firewall_name:
+                firewall_filter.set_firewall_context(firewall_name, firewall_host)
+            console_handler.addFilter(firewall_filter)
+            logger.addHandler(console_handler)
         
         # File handler
         log_file = settings.get('logging.file', 'logs/pa_stats.log')
@@ -97,3 +103,34 @@ def update_logger_firewall_context(logger: logging.Logger, firewall_name: str, f
             if isinstance(filter_obj, FirewallContextFilter):
                 filter_obj.set_firewall_context(firewall_name, firewall_host)
                 break
+
+
+def suppress_console_logging():
+    """Suppress console output for all loggers while keeping file logging active.
+    
+    This is useful for TUI applications (like traffic_viewer.py) where console
+    output would interfere with the terminal UI, but you still want logs written
+    to the log file.
+    
+    Call this function early in your application before any other imports.
+    It sets a global flag that prevents console handlers from being added to
+    new loggers, and also disables any existing console handlers.
+    """
+    global _console_logging_suppressed
+    _console_logging_suppressed = True
+    
+    # Also suppress any console handlers that already exist
+    # Get the root logger and all existing loggers
+    root_logger = logging.getLogger()
+    
+    # Set console handlers to CRITICAL+1 (effectively disabled) for root logger
+    for handler in root_logger.handlers:
+        if isinstance(handler, logging.StreamHandler) and not isinstance(handler, logging.FileHandler):
+            handler.setLevel(logging.CRITICAL + 1)
+    
+    # Also handle any loggers that have already been created
+    for logger_name in logging.Logger.manager.loggerDict:
+        logger = logging.getLogger(logger_name)
+        for handler in logger.handlers:
+            if isinstance(handler, logging.StreamHandler) and not isinstance(handler, logging.FileHandler):
+                handler.setLevel(logging.CRITICAL + 1)

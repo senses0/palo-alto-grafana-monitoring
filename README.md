@@ -9,6 +9,8 @@ A Python-based read-only monitoring tool for Palo Alto Networks firewalls that q
   - [Verify Data Collection and Line Protocol Conversion](#verify-data-collection-and-line-protocol-conversion)
   - [Configure Telegraf for Ingestion](#configure-telegraf-for-ingestion)
   - [Dashboard Preview](#dashboard-preview)
+- [Terminal Traffic Viewer](#terminal-traffic-viewer)
+  - [Quick Start](#quick-start)
 - [Features](#features)
 - [Architecture](#architecture)
   - [High-Level Architecture](#high-level-architecture)
@@ -157,6 +159,30 @@ You can select the data source for the dashboard at the time of import or from t
 | **BGP Peer Status**  | **Counters** | **HA Status and Dataplane CPU** | **IPSec Tunnels** |
 | [![BGP Peer Status](docs/images/thumbnails/thumbnail-dashboard-bgp-peer-stats.png)](docs/images/dashboard-bgp-peer-stats.png) | [![Counters](docs/images/thumbnails/thumbnail-dashboard-counters.png)](docs/images/dashboard-counters.png) | [![HA Status and Dataplane CPU](docs/images/thumbnails/thumbnail-dashboard-ha-status-and-dataplane-cpu.png)](docs/images/dashboard-ha-status-and-dataplane-cpu.png) | [![IPSec Tunnels](docs/images/thumbnails/thumbnail-dashboard-ipsec-tunnels.png)](docs/images/dashboard-ipsec-tunnels.png) |
 |  |  |  |  |
+
+
+## Terminal Traffic Viewer
+
+A real-time CLI traffic viewer for Palo Alto firewall interfaces. Built with the [Textual](https://github.com/Textualize/textual) TUI framework, it provides interactive interface selection and live ASCII traffic graphs.
+
+### Quick Start
+
+1. **Update dependencies** (if you recently did a `git pull`):
+```bash
+pip install -r requirements.txt
+```
+
+2. **Test connectivity** to verify interface data retrieval:
+```bash
+python traffic_viewer.py --test
+```
+
+3. **Run the traffic viewer**:
+```bash
+python traffic_viewer.py
+```
+
+https://github.com/senses0/palo-alto-grafana-monitoring/raw/main/docs/images/traffic-view-demo-33.mp4
 
 
 ## Features
@@ -876,6 +902,15 @@ palo-alto-grafana-monitoring/
 │   │   ├── routing.py
 │   │   ├── system.py
 │   │   └── vpn_tunnels.py
+│   ├── traffic_viewer/       # Terminal traffic viewer TUI
+│   │   ├── __init__.py
+│   │   ├── app.py            # Main application
+│   │   ├── constants.py      # Configuration constants
+│   │   ├── models.py         # Data models
+│   │   ├── screens.py        # UI screens
+│   │   ├── styles.py         # CSS styles
+│   │   ├── utils.py          # Utility functions
+│   │   └── widgets.py        # Custom widgets
 │   └── utils/                # Shared utilities
 │       ├── cli.py            # CLI helpers
 │       ├── logger.py         # Logging configuration
@@ -908,9 +943,11 @@ palo-alto-grafana-monitoring/
 ├── logs/                     # Application logs
 │   └── pa_stats.log          # Main log file
 ├── pa_query.py               # Main CLI tool
+├── traffic_viewer.py         # Terminal traffic viewer entry point
 ├── influxdb_converter.py     # InfluxDB line protocol converter
 ├── data_analyzer.py          # Schema analysis and documentation tool
 ├── obfuscate_json.py         # Sensitive data obfuscation for sharing
+├── terminal_traffic_viewer.md # Traffic viewer documentation
 ├── requirements.txt          # Python dependencies
 ├── pyproject.toml            # Project configuration
 ├── pytest.ini                # Test configuration

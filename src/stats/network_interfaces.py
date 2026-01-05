@@ -64,3 +64,77 @@ class InterfaceStats:
         
         # Execute on all firewalls using the unified client
         return self.client.execute_on_all_firewalls(_get_interface_data_single)
+
+    def get_interface_info(self) -> Dict[str, Any]:
+        """Get interface info only from all firewalls.
+        
+        This method queries only interface info (status, zone, IP, etc.) without
+        retrieving counters. It bypasses the collection enabled/disabled config
+        settings, making it suitable for interface discovery/selection UIs.
+        
+        Returns:
+            Dict with firewall names as keys, each containing:
+                - success: bool indicating if query succeeded
+                - data: dict with 'interface_info' and 'timestamp'
+                - error: error message if success is False
+        """
+        def _get_interface_info_single(client: PaloAltoClient) -> Dict[str, Any]:
+            """Get interface info from a single firewall."""
+            # Update logger context for this specific firewall
+            update_logger_firewall_context(logger, client.firewall_name, client.host)
+            
+            result = {}
+            
+            try:
+                interface_info_response = client.execute_operational_command(
+                    '<show><interface>all</interface></show>'
+                )
+                result['interface_info'] = interface_info_response.get('result', {})
+            except Exception as e:
+                logger.warning(f"Failed to get interface info: {e}")
+                result['interface_info'] = {}
+            
+            # Add timestamp
+            result['timestamp'] = datetime.now().isoformat()
+            
+            return parse_data_types(result)
+        
+        # Execute on all firewalls using the unified client
+        return self.client.execute_on_all_firewalls(_get_interface_info_single)
+
+    def get_interface_counters(self) -> Dict[str, Any]:
+        """Get interface counters only from all firewalls.
+        
+        This method queries only interface counters (ibytes/obytes) without
+        retrieving interface info. It bypasses the collection enabled/disabled
+        config settings, making it suitable for real-time traffic monitoring.
+        
+        Returns:
+            Dict with firewall names as keys, each containing:
+                - success: bool indicating if query succeeded
+                - data: dict with 'interface_counters' and 'timestamp'
+                - error: error message if success is False
+        """
+        def _get_interface_counters_single(client: PaloAltoClient) -> Dict[str, Any]:
+            """Get interface counters from a single firewall."""
+            # Update logger context for this specific firewall
+            update_logger_firewall_context(logger, client.firewall_name, client.host)
+            
+            result = {}
+            
+            try:
+                interface_counters_response = client.execute_operational_command(
+                    '<show><counter><interface>all</interface></counter></show>'
+                )
+                result['interface_counters'] = interface_counters_response.get('result', {})
+            except Exception as e:
+                logger.warning(f"Failed to get interface counters: {e}")
+                result['interface_counters'] = {}
+            
+            # Add timestamp
+            result['timestamp'] = datetime.now().isoformat()
+            
+            return parse_data_types(result)
+        
+        # Execute on all firewalls using the unified client
+        return self.client.execute_on_all_firewalls(_get_interface_counters_single)
